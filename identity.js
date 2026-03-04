@@ -20,8 +20,8 @@
             // 已有登记，直接同步
             syncToClarity(savedName);
         } else if (isWechat) {
-            // 微信环境且未登记，延迟 3 秒弹出，给客户缓冲期
-            setTimeout(showIdentityModal, 3000);
+            // 微信环境且未登记，暂时根据用户需求注释掉自动弹窗逻辑
+            // setTimeout(showIdentityModal, 3000);
         }
     });
 
