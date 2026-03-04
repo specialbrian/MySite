@@ -59,17 +59,171 @@ body {
 }
 
 .main-title {
-    font-size: 2.25rem;
+    font-size: 2rem;
     font-weight: 800;
     letter-spacing: -0.025em;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
 }
 
-.tagline {
-    font-size: 1.125rem;
-    color: var(--text-muted);
-    font-weight: 400;
+.tag-cloud {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 32px;
 }
+
+.tag-item {
+    font-size: 0.75rem;
+    padding: 6px 12px;
+    background: #f9fafb;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-muted);
+}
+
+/* Feature Sections */
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 48px 0 20px;
+}
+
+.section-emoji {
+    font-size: 1.25rem;
+}
+
+.core-business-card {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    border-radius: 20px;
+    padding: 32px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+
+.energy-tag {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: rgba(239, 68, 68, 0.9);
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.business-main-body {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.business-icon-large {
+    font-size: 3rem;
+    opacity: 0.9;
+}
+
+.business-info h3 {
+    font-size: 1.75rem;
+    margin-bottom: 4px;
+}
+
+.business-info p {
+    opacity: 0.8;
+    font-size: 0.95rem;
+}
+
+.business-stats {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.stat-line {
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.stat-highlight {
+    color: #facc15;
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+/* Grid Layout for Services */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.service-card {
+    background: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    position: relative;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.service-card:hover {
+    border-color: var(--accent-color);
+    transform: translateY(-2px);
+}
+
+.price-tag {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 4px 10px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    border-top-right-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
+.price-black {
+    background: #374151;
+    color: #fff;
+}
+
+.price-purple {
+    background: #8b5cf6;
+    color: #fff;
+}
+
+.price-red {
+    background: #ef4444;
+    color: #fff;
+}
+
+.price-green {
+    background: #10b981;
+    color: #fff;
+}
+
+.service-icon {
+    font-size: 2rem;
+    margin-bottom: 12px;
+    display: block;
+}
+
+.service-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
 
 /* Article List */
 .section-label {
