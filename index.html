@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>王攀的小屋 | 资深保险方案专家</title>
+    <title>攀帅的线上会客厅 | 资深保险方案专家</title>
     <link rel="stylesheet" href="index.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,16 +17,15 @@
         <header class="header">
             <div class="avatar-container">
                 <div class="avatar-circle">
-                    <img src="assets/avatar.jpg" alt="王攀" class="avatar-img">
+                    <img src="assets/avatar.jpg" alt="攀帅" class="avatar-img">
                 </div>
             </div>
-            <h1 class="main-title">王攀的小屋</h1>
+            <h1 class="main-title">攀帅的线上会客厅</h1>
             <div class="tag-cloud">
                 <span class="tag-item primary">保险顾问</span>
                 <span class="tag-item primary">社群主理人</span>
                 <span class="tag-item">财税投资</span>
                 <span class="tag-item">AI 实操</span>
-                <span class="tag-item">资源连接</span>
             </div>
         </header>
 
@@ -114,15 +113,20 @@
                     </div>
 
                     <button id="toggleBtn" class="toggle-services-btn" onclick="toggleServices()">查看更多增值服务 ↓</button>
+
+                    <div style="text-align: center; margin-top: 20px;">
+                        <a href="javascript:void(0)" onclick="openModal()" class="btn-primary">联系我 / Contact Me</a>
+                    </div>
                 </section>
             </div>
 
-            <!-- Right Column: Articles & Thoughts -->
+            <!-- Right Column: Articles & Products -->
             <div class="main-right">
+                <!-- Section 3: 内容与思考 -->
                 <section class="article-section">
                     <div class="section-header">
                         <span class="section-emoji">✍️</span>
-                        <span class="section-label">内容与思考</span>
+                        <span class="section-label">深度思考</span>
                     </div>
 
                     <a href="blog/ai-wechat-auto.html" class="article-card">
@@ -146,15 +150,65 @@
                     </a>
                 </section>
 
-                <div style="text-align: center;">
-                    <a href="javascript:void(0)" onclick="openModal()" class="btn-primary">联系我 / Contact</a>
+                <!-- Section 4: 知识与产品 -->
+                <section class="products-section" style="margin-top: 60px;">
+                    <div class="section-header">
+                        <span class="section-emoji">💎</span>
+                        <span class="section-label">知识与产品</span>
+                    </div>
+
+                    <div class="product-list">
+                        <a href="javascript:void(0)" onclick="openModal()" class="product-card blue-border">
+                            <div class="product-info">
+                                <h4>🤖 Gemini Pro+CC+Anti</h4>
+                                <p>三合一账号 (原价1400+)</p>
+                            </div>
+                            <div class="product-price">
+                                <span class="price-val">¥149</span>
+                            </div>
+                        </a>
+                        <a href="javascript:void(0)" onclick="openModal()" class="product-card orange-border">
+                            <div class="product-info">
+                                <h4>🎓 私域运营知识经验</h4>
+                                <p>3万人社群实战总结</p>
+                            </div>
+                            <div class="product-price">
+                                <span class="price-val">¥199</span>
+                                <span class="price-label">知识付费</span>
+                            </div>
+                        </a>
+                        <a href="javascript:void(0)" onclick="openModal()" class="product-card orange-border">
+                            <div class="product-info">
+                                <h4>🧠 AI 实操知识经验</h4>
+                                <p>落地实操，拒绝空谈</p>
+                            </div>
+                            <div class="product-price">
+                                <span class="price-val">¥199</span>
+                                <span class="price-label">知识付费</span>
+                            </div>
+                        </a>
+                        <a href="javascript:void(0)" onclick="openModal()" class="product-card orange-border">
+                            <div class="product-info">
+                                <h4>🔥 投资理财与FIRE经验</h4>
+                                <p>财务自由规划指南</p>
+                            </div>
+                            <div class="product-price">
+                                <span class="price-val">¥499</span>
+                                <span class="price-label">知识付费</span>
+                            </div>
+                        </a>
+                    </div>
+                </section>
+
+                <div style="text-align: center; margin-top: 60px;">
+                    <a href="javascript:void(0)" onclick="openModal()" class="btn-primary">更多商业合作</a>
                 </div>
             </div>
         </div>
 
         <!-- Footer -->
         <footer class="footer">
-            <p class="copy-text">© 2026 王攀的小屋. ALL RIGHTS RESERVED.</p>
+            <p class="copy-text">© 2026 攀帅的线上会客厅.</p>
             <a href="https://my.feishu.cn/wiki/BBbNwHSvXiGx5Ckf1xrcEdHwnxd" class="dashboard-entry" target="_blank">
                 <span>⚙️ 客户跟进看板</span>
             </a>
@@ -171,7 +225,6 @@
     </div>
 
     <script>
-        // Dynamic Days Calculation
         function updateExperienceDays() {
             const startDate = new Date('2023-06-01');
             const today = new Date();
@@ -180,7 +233,6 @@
             document.getElementById('days-count').innerText = daysDiff;
         }
 
-        // Toggle Services
         function toggleServices() {
             const extra = document.getElementById('extraServices');
             const btn = document.getElementById('toggleBtn');
@@ -193,7 +245,6 @@
             }
         }
 
-        // Modal Logic
         function openModal() { document.getElementById('qrModal').classList.add('active'); }
         function closeModal() { document.getElementById('qrModal').classList.remove('active'); }
         window.onclick = function (event) {
@@ -201,7 +252,6 @@
             if (event.target == modal) closeModal();
         }
 
-        // Initialize
         window.onload = updateExperienceDays;
     </script>
 </body>
