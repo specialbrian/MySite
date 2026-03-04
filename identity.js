@@ -3,25 +3,25 @@
  * 功能：检测微信环境，引导访客登记，并同步至 Microsoft Clarity
  */
 
-(function() {
+(function () {
     const CLARITY_ID = "vqbv0pg17i";
 
     // 1. 初始化 Clarity (如果尚未初始化)
-    window.clarity = window.clarity || function() { (window.clarity.q = window.clarity.q || []).push(arguments) };
+    window.clarity = window.clarity || function () { (window.clarity.q = window.clarity.q || []).push(arguments) };
 
     // 2. 环境检测
     const isWechat = /MicroMessenger/i.test(navigator.userAgent);
-    
+
     // 3. 核心逻辑
     window.addEventListener('load', () => {
         const savedName = localStorage.getItem('visitor_name');
-        
+
         if (savedName) {
             // 已有登记，直接同步
             syncToClarity(savedName);
         } else if (isWechat) {
-            // 微信环境且未登记，延迟弹出
-            setTimeout(showIdentityModal, 1500);
+            // 微信环境且未登记，延迟 3 秒弹出，给客户缓冲期
+            setTimeout(showIdentityModal, 3000);
         }
     });
 
@@ -54,7 +54,7 @@
         });
     }
 
-    window.closeIdentityModal = function() {
+    window.closeIdentityModal = function () {
         const m = document.getElementById('identityModal');
         if (m) m.remove();
     };
