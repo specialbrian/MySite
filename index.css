@@ -31,7 +31,7 @@ body {
 /* Header */
 .header {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
 }
 
 .avatar-container {
@@ -93,7 +93,7 @@ body {
     align-items: center;
     /* 确保Icon与文本在同一行对齐 */
     gap: 10px;
-    margin: 32px 0 20px;
+    margin: 20px 0 16px;
 }
 
 .section-label {
@@ -470,9 +470,11 @@ body {
 }
 
 .modal-qr {
-    width: 200px;
-    height: 200px;
+    width: 220px;
+    height: auto;
+    object-fit: contain;
     margin: 0 auto 16px;
+    display: block;
     border-radius: 12px;
     border: 1px solid var(--border-color);
 }
