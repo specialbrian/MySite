@@ -592,3 +592,77 @@ body {
         margin-bottom: 1em;
     }
 }
+
+/* Identity Modal (Visitor Registry) */
+.identity-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    align-items: center;
+    justify-content: center;
+}
+
+.identity-modal.active {
+    display: flex;
+}
+
+.identity-card {
+    background: #fff;
+    padding: 40px;
+    border-radius: 32px;
+    text-align: center;
+    max-width: 360px;
+    width: 90%;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
+}
+
+.identity-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.identity-desc {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 32px;
+}
+
+.identity-input {
+    width: 100%;
+    padding: 16px 24px;
+    border-radius: 99px;
+    border: 1px solid var(--border-color);
+    background: #f9fafb;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    outline: none;
+    text-align: center;
+}
+
+.identity-input:focus {
+    border-color: var(--accent-color);
+}
+
+.identity-submit {
+    width: 100%;
+    padding: 16px;
+    background: #111;
+    color: #fff;
+    border-radius: 99px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.identity-submit:hover {
+    transform: scale(1.02);
+}
