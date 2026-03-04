@@ -4,48 +4,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>今日 AI 助理工作实录 | 攀帅的博客</title>
+    <title>今日 AI 助理工作实录 | 攀帅</title>
     <link rel="stylesheet" href="../index.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Noto+Serif+SC:wght@700&family=Inter:wght@400;600&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <div class="container">
-        <header class="header">
-            <a href="../index.html"
-                style="text-decoration: none; color: var(--text-muted); font-weight: 600; font-size: 0.85rem;">[ ← Back
-                to Index ]</a>
-            <h1 class="main-title" style="margin-top: 40px; line-height: 1.2;">今日 AI 助理工作实录：打通底层数据基建</h1>
-            <p class="article-date">Published on Feb 28, 2026 by 攀帅</p>
+        <header class="article-header">
+            <a href="../index.html" class="back-link">← 返回主页 / Index</a>
+            <h1 class="main-title" style="text-align: left;">今日 AI 助理工作实录：打通底层数据基建</h1>
+            <p class="article-date">2026年2月28日 · 攀帅</p>
         </header>
 
-        <article class="article-body">
-            <img src="../assets/blog-images/2026-02-28/cover.png" class="blog-image" alt="Cover">
-            <p>很多人一听到让 AI 去翻自己写过的历史代码，第一反应是这就像在抽盲盒，随时可能翻车。但真正决定你人效的，从来不是用多贵的算力，而是你能否打通系统底层的执行逻辑。</p>
-            <p>作为一个在互联网摸爬滚打了 10 多年的老 PM，我只看最终落袋的投产比。这几天我受够了我的两个 AI 助手——管家大龙（Openclaw）和特种兵
-                Antigravity——存在着严重的“数据孤岛”问题。这种跨部门不通气导致的人效损耗，在过去的大厂架构里我见得太多了。</p>
+        <article class="blog-body">
+            <img src="../assets/blog-images/2026-02-28/cover.png" class="blog-image" alt="封面图">
+            <p>真正决定你人效的，从来不是用多贵的算力，而是你能否打通系统底层的执行逻辑。作为一个老 PM，我只看投产比。我的两个助手——管家大龙（Openclaw）和特种兵 Antigravity 曾存在严重的数据孤岛。
+            </p>
+            <p>于是我下达了一个死命令：打通底层数据基建。一个下午，这套“双脑联合行动 SOP”跑通了三个核心迭代。</p>
 
             <h2>1. 记忆互通：重构底层操作系统</h2>
-            <img src="../assets/blog-images/2026-02-28/img_1.png" class="blog-image" alt="记忆">
-            <p>最开始大龙负责记录每日运营日志，而负责去前线打仗的特种兵完全拿不到前期的策略大纲。我让特种兵写了一套极简的 Python
-                脚本作为抓手，强行把每天的联合日志同步写进了大龙的记忆体里。现在，他们终于能在一个会议室里看同一份数据报表了。</p>
+            <img src="../assets/blog-images/2026-02-28/img_1.png" class="blog-image" alt="插图">
+            <p>大龙记录日志，特种兵负责执行，但由于信息不通导致损耗。我编写了脚本，强行把日志同步到大龙记忆体里。现在，他们终于能在一个会议室里看同一份数据报表了。</p>
 
-            <h2>2. 资产复用：找回失落的开发者凭证</h2>
-            <img src="../assets/blog-images/2026-02-28/img_2.png" class="blog-image" alt="凭证">
-            <p>为了实现微信公众号的自动发布闭环，我们需要 AppSecret。但我完全想不起来放哪了。结果，特种兵直接全局遍历了我以前的本地测试工程代码，硬生生从一个废弃许久的脚本里，帮我把当时写死的密钥挖了出来。</p>
+            <h2>2. 资产复用：找回失落的凭证</h2>
+            <img src="../assets/blog-images/2026-02-28/img_2.png" class="blog-image" alt="插图">
+            <p>为了自动发布，需要 AppSecret，但我完全记不起来放哪了。特种兵直接全局遍历了我以前的测试代码，从废弃脚本里挖出了密钥。这证明了资产数字化积累的重要性。</p>
 
-            <h2>3. 交付闭环：官方紫边排版引擎回归</h2>
-            <img src="../assets/blog-images/2026-02-28/img_3.png" class="blog-image" alt="引擎">
-            <p>文章写完后，我们抛弃了花里胡哨且水土不服的外部组装件。我们选择直接注入 Openclaw 官方出厂配置的原生紫边排版引擎
-                md2wechat.py。从优雅的引用块设计，到专属深紫色高亮强调色，全自动无缝生成极具克制感的推送草稿。</p>
-            <p>这并不是在追求多炫酷的技术，而是为了建立一条防御线。把繁琐的平台复制粘贴和排版操作交给机器，避免自己在无意义的体力劳动中被内耗。真正的效率，永远保留一个对自己时间“降噪”的选项。</p>
-            <img src="../assets/blog-images/2026-02-28/img_4.png" class="blog-image" alt="结语">
+            <h2>3. 交付闭环：原生紫边排版引擎回归</h2>
+            <img src="../assets/blog-images/2026-02-28/img_3.png" class="blog-image" alt="插图">
+            <p>抛弃花里胡哨的第三方组件，直接注入 Openclaw 原生的紫边引擎。从引用块到代码块皮肤，全自动生成极具克制感的稿件。这避免了自己在无意义的体力劳动中被内耗。</p>
+            <img src="../assets/blog-images/2026-02-28/img_4.png" class="blog-image" alt="插图">
+            <p>真正的效率，是永远保留一个对自己时间“降噪”的选项。如果你也有这类内耗，希望这个 SOP 能帮到你。</p>
         </article>
 
-        <footer class="footer" style="text-align: center;">
-            <p style="font-size: 0.75rem; color: #bbb;">© 2026 PAN SHUAI. ALL RIGHTS RESERVED.</p>
+        <footer class="footer" style="justify-content: center; border: none; margin-top: 60px;">
+            <p class="copy-text">© 2026 PAN SHUAI.</p>
         </footer>
     </div>
 </body>

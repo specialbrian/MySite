@@ -6,80 +6,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>攀帅 | 资深保险方案专家 & AI 系统架构师</title>
     <link rel="stylesheet" href="index.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Noto+Serif+SC:wght@700&family=Inter:wght@400;600&display=swap"
-        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <div class="container">
+        <!-- Header -->
         <header class="header">
-            <div class="avatar-wrapper">
-                <div class="avatar-placeholder">P</div>
+            <div class="avatar-container">
+                <div class="avatar-circle">攀</div>
             </div>
             <h1 class="main-title">攀帅</h1>
             <p class="tagline">资深保险方案专家 / AI 销售系统架构师</p>
         </header>
 
-        <section class="contact-actions">
-            <a href="javascript:void(0)" onclick="openModal()" class="action-link">联系我</a>
-            <a href="https://specialbrian.github.io/MySite/blog/ai-wechat-auto.html" class="action-link">阅读文章</a>
-        </section>
-
-        <section class="article-list">
+        <!-- Article List -->
+        <main class="article-list">
             <span class="section-label">Selected Writings / 专业文章</span>
 
-            <a href="blog/ai-wechat-auto.html" class="article-item">
-                <div class="article-date">Feb 28, 2026</div>
+            <a href="blog/ai-wechat-auto.html" class="article-card">
+                <div class="article-date">2026.02.28</div>
                 <h3 class="article-title">花了一整天，我终于让 AI 帮我一键发公众号了</h3>
             </a>
 
-            <a href="blog/soul-law.html" class="article-item">
-                <div class="article-date">Feb 25, 2026</div>
+            <a href="blog/soul-law.html" class="article-card">
+                <div class="article-date">2026.02.25</div>
                 <h3 class="article-title">灵魂铁律：给数字分身注入"反方人格"</h3>
             </a>
 
-            <a href="blog/phone-change.html" class="article-item">
-                <div class="article-date">Feb 28, 2026</div>
+            <a href="blog/phone-change.html" class="article-card">
+                <div class="article-date">2026.02.28</div>
                 <h3 class="article-title">换手机号等于脱一层皮：数字迁徙 SOP</h3>
             </a>
 
-            <a href="blog/ai-work-log.html" class="article-item">
-                <div class="article-date">Feb 28, 2026</div>
+            <a href="blog/ai-work-log.html" class="article-card">
+                <div class="article-date">2026.02.28</div>
                 <h3 class="article-title">今日 AI 助理工作实录：打通底层数据基建</h3>
             </a>
+        </main>
+
+        <!-- Contact Section (Moved to Bottom) -->
+        <section class="contact-section">
+            <a href="javascript:void(0)" onclick="openModal()" class="btn-primary">联系我 / Contact Me</a>
         </section>
 
+        <!-- Footer -->
         <footer class="footer">
-            <a href="https://my.feishu.cn/wiki/BBbNwHSvXiGx5Ckf1xrcEdHwnxd" class="admin-trigger" target="_blank">
+            <p class="copy-text">© 2026 PAN SHUAI.</p>
+            <a href="https://my.feishu.cn/wiki/BBbNwHSvXiGx5Ckf1xrcEdHwnxd" class="dashboard-entry" target="_blank">
                 <span>⚙️ 客户跟进看板</span>
             </a>
-            <p style="font-size: 0.75rem; color: #bbb; margin-top: 20px;">© 2026 PAN SHUAI. ALL RIGHTS RESERVED.</p>
         </footer>
     </div>
 
-    <!-- Modal for QR Code -->
+    <!-- Modal for QR -->
     <div id="qrModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-card">
             <img src="assets/wechat_qr.jpg" alt="WeChat QR" class="modal-qr">
-            <p class="tagline">扫一扫，加我微信</p>
-            <div class="close-modal" onclick="closeModal()">[ Close / 关闭 ]</div>
+            <p style="margin-bottom: 24px; font-weight: 500;">扫一扫，加我微信</p>
+            <span class="close-btn" onclick="closeModal()">点击关闭 / Close</span>
         </div>
     </div>
 
     <script>
-        function openModal() {
-            document.getElementById('qrModal').classList.add('active');
-        }
-        function closeModal() {
-            document.getElementById('qrModal').classList.remove('active');
-        }
-        // Click outside to close
+        function openModal() { document.getElementById('qrModal').classList.add('active'); }
+        function closeModal() { document.getElementById('qrModal').classList.remove('active'); }
         window.onclick = function (event) {
             let modal = document.getElementById('qrModal');
-            if (event.target == modal) {
-                closeModal();
-            }
+            if (event.target == modal) closeModal();
         }
     </script>
 </body>
