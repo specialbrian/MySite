@@ -558,7 +558,8 @@ body {
     color: #374151;
 }
 
-.blog-image {
+.blog-image,
+.blog-body img {
     max-width: 100%;
     height: auto;
     display: block;
@@ -580,7 +581,8 @@ body {
         line-height: 1.8;
     }
 
-    .blog-image {
+    .blog-image,
+    .blog-body img {
         margin: 2em auto;
         border-radius: 8px;
         width: 100%;
