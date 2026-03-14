@@ -9,7 +9,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "vqbv0pg17i");</script></head>
+    <script
+        type="text/javascript">(function (c, l, a, r, i, t, y) { c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) }; t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i; y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y); })(window, document, "clarity", "script", "vqbv0pg17i");</script>
+</head>
 
 <body>
     <div class="container">
@@ -125,7 +127,12 @@
                         <span class="section-emoji">✍️</span>
                         <span class="section-label">深度思考</span>
                     </div>
-                    
+
+                    <a href="blog/ai-agent-hidden-cost.html" class="article-card">
+                        <div class="article-date">2026.03.14</div>
+                        <h3 class="article-title">引入 AI Agent 后，为什么你反而更累了？算算这笔"隐形成本账"</h3>
+                    </a>
+
                     <a href="blog/小红书自动化实录.html" class="article-card">
                         <div class="article-date">2026.03.06</div>
                         <h3 class="article-title">深度实录：我如何通过 RPA 技术，实现小红书零人工自动化发布</h3>
@@ -151,51 +158,53 @@
                         <h3 class="article-title">换手机号等于脱一层皮：数字迁徙 SOP</h3>
                     </a>
 
-                    
+
                     <div id="view-more-container" style="text-align: center; margin-top: 20px;">
-                        <button id="view-more-btn" onclick="toggleArticles()" style="background: none; border: 1px solid #ddd; padding: 8px 20px; border-radius: 20px; cursor: pointer; color: #666; font-size: 14px;">查看更多文章 / View More</button>
+                        <button id="view-more-btn" onclick="toggleArticles()"
+                            style="background: none; border: 1px solid #ddd; padding: 8px 20px; border-radius: 20px; cursor: pointer; color: #666; font-size: 14px;">查看更多文章
+                            / View More</button>
                     </div>
                     <div id="hidden-articles" style="display: none;">
-                        
-                    <a href="blog/ai-wechat-auto.html" class="article-card">
-                        <div class="article-date">2026.02.28</div>
-                        <h3 class="article-title">花了一整天，我终于让 AI 帮我一键发公众号了</h3>
-                    </a>
 
-                    <a href="blog/soul-law.html" class="article-card">
-                        <div class="article-date">2026.02.25</div>
-                        <h3 class="article-title">灵魂铁律：给数字分身注入"反方人格"</h3>
-                    </a>
+                        <a href="blog/ai-wechat-auto.html" class="article-card">
+                            <div class="article-date">2026.02.28</div>
+                            <h3 class="article-title">花了一整天，我终于让 AI 帮我一键发公众号了</h3>
+                        </a>
 
-                    <a href="blog/攀帅原创-换房复盘.html" class="article-card">
-                        <div class="article-date">2026.02.23</div>
-                        <h3 class="article-title">一次9小时搞定的北京换房交易，成本"负8万"</h3>
-                    </a>
+                        <a href="blog/soul-law.html" class="article-card">
+                            <div class="article-date">2026.02.25</div>
+                            <h3 class="article-title">灵魂铁律：给数字分身注入"反方人格"</h3>
+                        </a>
 
-                    <a href="blog/攀帅x陈昆-ai生图聊天记录.html" class="article-card">
-                        <div class="article-date">2026.02.23</div>
-                        <h3 class="article-title">攀帅 × 陈先生 聊天记录整理</h3>
-                    </a>
+                        <a href="blog/攀帅原创-换房复盘.html" class="article-card">
+                            <div class="article-date">2026.02.23</div>
+                            <h3 class="article-title">一次9小时搞定的北京换房交易，成本"负8万"</h3>
+                        </a>
 
-                    <a href="blog/ai合作5级神力.html" class="article-card">
-                        <div class="article-date">2026.02.22</div>
-                        <h3 class="article-title">我近期修炼出跟AI合作的5级神力（录音转录）</h3>
-                    </a>
+                        <a href="blog/攀帅x陈昆-ai生图聊天记录.html" class="article-card">
+                            <div class="article-date">2026.02.23</div>
+                            <h3 class="article-title">攀帅 × 陈先生 聊天记录整理</h3>
+                        </a>
+
+                        <a href="blog/ai合作5级神力.html" class="article-card">
+                            <div class="article-date">2026.02.22</div>
+                            <h3 class="article-title">我近期修炼出跟AI合作的5级神力（录音转录）</h3>
+                        </a>
 
                     </div>
                     <script>
-                    function toggleArticles() {
-                        const hiddenDiv = document.getElementById('hidden-articles');
-                        const btn = document.getElementById('view-more-btn');
-                        if (hiddenDiv.style.display === 'none') {
-                            hiddenDiv.style.display = 'block';
-                            btn.textContent = '折叠文章 / Show Less';
-                        } else {
-                            hiddenDiv.style.display = 'none';
-                            btn.textContent = '查看更多文章 / View More';
-                            window.scrollTo({ top: document.querySelector('.article-section').offsetTop, behavior: 'smooth' });
+                        function toggleArticles() {
+                            const hiddenDiv = document.getElementById('hidden-articles');
+                            const btn = document.getElementById('view-more-btn');
+                            if (hiddenDiv.style.display === 'none') {
+                                hiddenDiv.style.display = 'block';
+                                btn.textContent = '折叠文章 / Show Less';
+                            } else {
+                                hiddenDiv.style.display = 'none';
+                                btn.textContent = '查看更多文章 / View More';
+                                window.scrollTo({ top: document.querySelector('.article-section').offsetTop, behavior: 'smooth' });
+                            }
                         }
-                    }
                     </script>
                 </section>
 
@@ -223,7 +232,6 @@
                             </div>
                             <div class="product-price">
                                 <span class="price-val">¥199</span>
-                                <span class="price-label">知识付费</span>
                             </div>
                         </a>
                         <a href="javascript:void(0)" onclick="openModal()" class="product-card orange-border">
@@ -233,7 +241,6 @@
                             </div>
                             <div class="product-price">
                                 <span class="price-val">¥199</span>
-                                <span class="price-label">知识付费</span>
                             </div>
                         </a>
                         <a href="javascript:void(0)" onclick="openModal()" class="product-card orange-border">
@@ -243,7 +250,6 @@
                             </div>
                             <div class="product-price">
                                 <span class="price-val">¥499</span>
-                                <span class="price-label">知识付费</span>
                             </div>
                         </a>
                     </div>
@@ -258,6 +264,14 @@
         <!-- Footer -->
         <footer class="footer">
             <p class="copy-text">© 2026 攀帅的线上会客厅.</p>
+            <a href="javascript:void(0)" onclick="enterZhinang('hippo', event)" class="dashboard-entry"
+                style="margin-right: 15px;">
+                <span>🧠 河马奶奶 AI智囊团</span>
+            </a>
+            <a href="javascript:void(0)" onclick="enterZhinang('ponghub', event)" class="dashboard-entry"
+                style="margin-right: 15px;">
+                <span>💼 Ponghub AI智囊</span>
+            </a>
             <a href="https://my.feishu.cn/wiki/BBbNwHSvXiGx5Ckf1xrcEdHwnxd" class="dashboard-entry" target="_blank">
                 <span>⚙️ 客户跟进看板</span>
             </a>
@@ -273,7 +287,91 @@
         </div>
     </div>
 
+    <!-- Hippo Auth Modal (Custom Popup) -->
+    <div id="hippoModal" class="modal">
+        <div class="modal-card">
+            <div id="zhinangIcon" style="font-size: 3rem; margin-bottom: 16px;">🧠</div>
+            <h3 id="zhinangTitle" style="font-size: 1.5rem; font-weight: 800; margin-bottom: 8px;">智囊团专场入口</h3>
+            <p id="hippoDesc" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px;">内部交流系统，请输入口令开启对话
+            </p>
+            <input type="text" id="hippoPasscode" class="identity-input" placeholder="输入口令 / Passcode"
+                onkeyup="if(event.keyCode===13) submitHippo()">
+            <div style="display: flex; gap: 12px; justify-content: center;">
+                <button onclick="submitHippo()" class="identity-submit" style="flex: 1;">立即进入</button>
+                <button onclick="closeHippo()" class="close-btn"
+                    style="flex: 1; padding: 16px; font-weight: 700; color: #111;">返回</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        let currentZhinang = 'hippo';
+
+        function enterZhinang(type, e) {
+            if (e) { e.preventDefault(); e.stopPropagation(); }
+            currentZhinang = type;
+
+            const modal = document.getElementById('hippoModal');
+            const title = document.getElementById('zhinangTitle');
+            const icon = document.getElementById('zhinangIcon');
+            const input = document.getElementById('hippoPasscode');
+            const desc = document.getElementById('hippoDesc');
+
+            if (type === 'ponghub') {
+                title.innerText = 'Ponghub AI 智囊入口';
+                icon.innerText = '💼';
+                desc.innerText = '保险经纪人专业版，输入口令开启咨询';
+            } else {
+                title.innerText = '河马奶奶 AI 智囊团';
+                icon.innerText = '🧠';
+                desc.innerText = '内部交流系统，请输入口令开启对话';
+            }
+
+            modal.classList.add('active');
+            input.value = '';
+            input.style.borderColor = 'var(--border-color)';
+            desc.style.color = 'var(--text-muted)';
+            setTimeout(() => input.focus(), 300);
+        }
+
+        function closeHippo() {
+            document.getElementById('hippoModal').classList.remove('active');
+        }
+
+        function submitHippo() {
+            const input = document.getElementById('hippoPasscode');
+            const desc = document.getElementById('hippoDesc');
+            const passcode = input.value;
+
+            // 校验逻辑：hippo -> hema (411), ponghub -> pong (440)
+            const verify = (p, type) => {
+                const val = (p || "").trim().toLowerCase();
+                if (val.length !== 4) return false;
+                let s = 0;
+                for (let i = 0; i < val.length; i++) s += val.charCodeAt(i);
+
+                if (type === 'hippo') {
+                    return s === 411 && val[0] === 'h' && val.indexOf('a') === 3;
+                } else {
+                    // pong: p(112) + o(111) + n(110) + g(103) = 436
+                    return s === 436 && val[0] === 'p' && val[3] === 'g';
+                }
+            };
+
+            if (verify(passcode, currentZhinang)) {
+                closeHippo();
+                const target = currentZhinang === 'hippo' ? "/hippo-grandma" : "/ponghub";
+                window.open(target, "_blank");
+            } else if (passcode) {
+                // 浮窗内错误提示，不使用 alert
+                input.style.borderColor = '#ef4444';
+                desc.innerText = '⚠️ 口令错误，请联系攀帅获取';
+                desc.style.color = '#ef4444';
+                input.value = '';
+                input.focus();
+            }
+        }
+
         function updateExperienceDays() {
             const startDate = new Date('2023-06-01');
             const today = new Date();
@@ -296,13 +394,17 @@
 
         function openModal() { document.getElementById('qrModal').classList.add('active'); }
         function closeModal() { document.getElementById('qrModal').classList.remove('active'); }
+
         window.onclick = function (event) {
-            let modal = document.getElementById('qrModal');
-            if (event.target == modal) closeModal();
+            let qrModal = document.getElementById('qrModal');
+            let hippoModal = document.getElementById('hippoModal');
+            if (event.target == qrModal) closeModal();
+            if (event.target == hippoModal) closeHippo();
         }
 
         window.onload = updateExperienceDays;
     </script>
-<script src="identity.js"></script></body>
+    <script src="identity.js"></script>
+</body>
 
 </html>
