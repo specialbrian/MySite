@@ -1,0 +1,28 @@
+{
+    "rewrites": [
+        {
+            "source": "/hippo-grandma",
+            "destination": "https://hippo-grandma-service.vercel.app"
+        },
+        {
+            "source": "/hippo-grandma/",
+            "destination": "https://hippo-grandma-service.vercel.app"
+        },
+        {
+            "source": "/ponghub",
+            "destination": "https://ponghub-three.vercel.app"
+        },
+        {
+            "source": "/ponghub/",
+            "destination": "https://ponghub-three.vercel.app"
+        },
+        {
+            "source": "/api/chat",
+            "destination": "https://hippo-grandma-service.vercel.app/api/chat"
+        },
+        {
+            "source": "/api/pong-chat",
+            "destination": "https://ponghub-three.vercel.app/api/pong-chat"
+        }
+    ]
+}
