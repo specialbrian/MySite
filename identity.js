@@ -66,3 +66,52 @@
         console.log(`[Identity] Visitor identified as: ${name}`);
     }
 })();
+
+/* ============================================================
+   Lightbox — 博文图片点击放大
+   ============================================================ */
+(function () {
+    window.addEventListener('load', () => {
+        // 只对博文正文中的图片生效
+        const images = document.querySelectorAll('.blog-body img, .blog-image');
+        if (!images.length) return;
+
+        // 创建 Lightbox DOM
+        const overlay = document.createElement('div');
+        overlay.className = 'lightbox-overlay';
+        overlay.innerHTML = `
+            <span class="lightbox-close">&times;</span>
+            <img class="lightbox-img" src="" alt="">
+        `;
+        document.body.appendChild(overlay);
+
+        const lbImg = overlay.querySelector('.lightbox-img');
+        const lbClose = overlay.querySelector('.lightbox-close');
+
+        // 给每张图添加点击事件
+        images.forEach(img => {
+            img.style.cursor = 'zoom-in';
+            img.addEventListener('click', (e) => {
+                e.stopPropagation();
+                lbImg.src = img.src;
+                lbImg.alt = img.alt || '';
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        // 关闭 Lightbox
+        function closeLightbox() {
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        overlay.addEventListener('click', (e) => {
+            if (e.target !== lbImg) closeLightbox();
+        });
+        lbClose.addEventListener('click', closeLightbox);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+    });
+})();
