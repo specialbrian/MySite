@@ -534,8 +534,9 @@ body {
     color: #374151;
     /* 柔和些的黑色 */
     letter-spacing: 0.02em;
-    overflow-wrap: break-word;
+    overflow-wrap: anywhere;
     word-wrap: break-word;
+    word-break: break-all;
 }
 
 .blog-body h2 {
@@ -558,8 +559,15 @@ body {
     line-height: 2;
     margin-bottom: 0.5em;
     color: #374151;
-    overflow-wrap: break-word;
+    overflow-wrap: anywhere;
     word-wrap: break-word;
+    word-break: break-all;
+}
+
+.blog-body a {
+    overflow-wrap: anywhere;
+    word-wrap: break-word;
+    word-break: break-all;
 }
 
 .blog-image,
