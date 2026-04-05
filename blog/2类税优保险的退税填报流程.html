@@ -20,34 +20,113 @@
             <p class="article-date">2026年04月05日 · 攀帅</p>
         </header>
         <article class="blog-body">
-<h3>一、个人养老金</h3>
-<p><strong>第1步：如下图，找到大的功能模块</strong></p>
-<p>![[个养第1步找模块.jpg]]</p>
-<p><strong>第2步：拉到申报详情页底部，找到个人养老金入口</strong></p>
-<p>![[个养第2步找入口.jpg]]</p>
-<p><strong>第3步：使用一站式申报，选择报税年份（去年）自行申报</strong></p>
-<p>![[个养第3步一键填报.jpg]]</p>
-<h3>二、税优健康险</h3>
-<p><strong>第1步：在纸质或电子合同封面找到税优识别码</strong></p>
-<p>友邦的电子合同，可以在“友邦友享”app首页的“我的保单”中可以找到；其他公司电子合同也可在首页中找到。</p>
-<p>![[税优第1步找编号 1.jpg]]</p>
-<p><strong>第2步：找到商业健康险入口</strong></p>
-<p>![[税优第2步找入口 1.jpg]]</p>
-<p><strong>第3步：新增一条商业健康险</strong></p>
-<p>![[税优第3步新增商业健康险 1.jpg]]</p>
-<p><strong>第4步：录入健康险抵税信息</strong></p>
-<p>1、保单生效日期：参考保单合同信息页</p>
-<p>2、年度保费：2400（如果是按退税定格缴纳），月度保费：年度保费/12</p>
-<p>3、扣除金额：按实际抵扣月数折算抵扣金额，比如25年8月购买的税优健康险，那么就是8~12月这5个月参与抵扣，也就是5 * 200 = 1000元</p>
-<p>4、保险公司：根据合同中保险公司的全称填写</p>
-<p>![[税优第4步填信息 1.jpg]]</p>
-<h3>参考资料</h3>
-<p>国家税务总局：</p>
-<p>https://www.chinatax.gov.cn/</p>
-<p>《个人所得税综合所得汇算清缴管理办法》总纲</p>
-<p>https://fgk.chinatax.gov.cn/zcfgk/c100011/c5238560/content.html</p>
-<p>专项附加扣除暂行办法的通知</p>
-<p>https://www.gov.cn/zhengce/content/2018-12/22/content_5351181.htm</p>
+<h1>排坑实践与避坑指南 (Pitfalls &amp; Best Practices)</h1>
+<p>在搭建和升级自媒体排版推流系统时，遇到了一些非常典型的前端与 Node.js 服务端的&quot;坑&quot;。在此整理，方便未来在使用 Antigravity 进行二次开发时快速避雷。</p>
+<h2>1. 致命缺陷：前端 Markdown 解析导致原文被空数据覆盖</h2>
+<p><strong>问题现象</strong>：
+在 Web 端点击&quot;推送到草稿箱&quot;或者&quot;保存&quot;后，系统报错提示 <code>解析出的 Markdown 内容为空，拒绝推流</code>，随后发现源 Markdown 文件大小变成 1 字节（即完全被清空），连带所有插入的公众号图片也一并消失。</p>
+<p><strong>问题根因</strong>：</p>
+<ul>
+<li><strong><code>&lt;section&gt;</code> 标签未处理</strong>：微信公众号通常为了呈现精美的排版设计，很多时候会将段落放在自定义的 <code>section</code> 或 <code>fieldset</code> 中。原有的前端 <code>htmlToMarkdown</code> 函数使用循环递归解析 DOM 时，仅支持了 <code>DIV</code> / <code>SPAN</code> / <code>P</code>。一旦遇到未识别的 <code>&lt;section&gt;</code>，它会直接返回空字符串 <code>''</code>。这导致了整篇文章被判为空白。</li>
+<li><strong>缺失 <code>&lt;img&gt;</code> 元素的提取</strong>：由于前端转 MD 时在行内节点（inline nodes）提取规则中没有加上原本 <code>IMG</code> 的 <code>![Alt](Src)</code> 正则转换。导致所有通过 Python 排版塞入文章内的图片（被放在 <code>&lt;p&gt;&lt;img&gt;&lt;/p&gt;</code> 里）在回抽时被抛弃成了空段落！</li>
+<li><strong>无安全垫的保存机制</strong>：后端在此漏洞的加持下，无脑接收到了空白内容，并使用 <code>fs.writeFileSync(article.md_file, markdown)</code> 覆盖了原本极其珍贵的源文件。</li>
+</ul>
+<p><strong>如何避坑的 (解决方案)</strong>：</p>
+<ol>
+<li><code>htmlToMarkdown</code> 在扫描 <code>processNode</code> 增加对 <code>SECTION</code> 等包裹性标签的处理。</li>
+<li>内部 <code>inlineToMd(node)</code> 函数必须专门增加 <code>img</code> 转换。</li>
+<li><strong>安全另存为机制</strong>（下面详诉）。</li>
+</ol>
+<h2>2. 机制升级：安全保存垫（&quot;防污染&quot;护城河）</h2>
+<p><strong>机制背景</strong>：如果前端逻辑由于 DOM 丢失或者解析 Bug 导致用户不小心存废了原稿，会造成无法挽回的后果。
+<strong>解决方案</strong>：
+在 Node 端 <code>/save</code> 与 <code>/publish</code> 接口中拦截。
+如果当前操作文件未携带 <code>_最新修订版.md</code>，则在保存前端传回来的 Markdown 时，将其另存为 <code>[原名]_最新修订版.md</code>。不仅不碰初稿源文件，而且调用内置的 SQLite 函数更新本篇文章在库中的路径指针（<code>updateMdPath</code>）。之后的任何更新、重推流，都将在这个新文件上进行，实现 100% 数据安全解耦。</p>
+<h2>3. 浏览器 Confirm 线程阻塞导致的&quot;闪退&quot;</h2>
+<p><strong>问题现象</strong>：
+当长耗时的&quot;发布推流&quot;异步操作发起时（此操作包含调用 Python 上传图片、生成草稿等长达几十秒的行为）。前端的验证与反馈往往存在严重错乱。表现为点击 <code>button</code> 后，原生 <code>window.confirm</code> 在屏幕上狂闪一下后瞬间消失。用户表示&quot;没来得及点确定推流就断了&quot;。</p>
+<p><strong>问题根因</strong>：
+现代原生浏览器（如 Chrome 或 Safari）为了防止恶意弹窗，在特定环境内（或者快速的高频连点重入中）会隐式抛弃掉原生的系统挂起操作。也有可能是与其它定时重载机制冲突导致生命周期短促。
+<strong>解决方案</strong>：
+彻底抛弃原生短命的 <code>Toast</code> 与原生 <code>alert</code>/<code>confirm</code>。使用纯前端 DOM 堆砌的 Modal（由 <code>position: fixed</code> 构成的浮层）。设计一个带有确定/取消按钮的 HTML <code>div</code>，彻底隔离外部刷新与机制干扰。</p>
+<h2>4. 后台长耗时无知觉导致的错误多次点击</h2>
+<p>推流的过程极其缓慢（涉及到素材逐帧上传微信后台）。如果不做全屏蒙层锁定，用户极易认为宕机进而不断狂点&quot;推送草稿箱&quot;，从而诱发上述事件链的污染。</p>
+<ul>
+<li><strong>最佳规范</strong>：只要按下&quot;确认推流&quot;，前端必须渲染出一块占据顶层 <code>z-index: 9999</code>，含有动态 CSS（Spinner Animation <code>border-top-color: rotate</code>）遮罩的界面（例：<code>#loading-overlay</code>），直到 Fetch 返回结果再由对应的代码主动释放 DOM。这极大地稳定了前端的心智预期。</li>
+</ul>
+<p>系统被设计为可以多发分账。但原有的 Node.js 后端强行将 account = <code>req.body.account || '攀帅'</code> 并推到了唯一固定默认账号中。使用正则 <code>data-nickname=&quot;35岁不危机&quot;</code> 由服务器端去检索文章本身的归属方标签是极其聪明的办法。但要注意如果正则取出的 <code>client_name</code> 在微信环境不存在时，也要设计平滑的报错熔断。</p>
+<h2>6. 富文本编辑器的&quot;自作聪明&quot;与样式脱落 (ContentEditable Quirks)</h2>
+<p><strong>问题现象</strong>：在前端执行 <code>document.execCommand('bold')</code> 取消加粗时，原本被加粗的文字在预览中依然呈现深蓝色残留视觉。
+<strong>问题根因</strong>：若推流的 Markdown 经 <code>md2wechat.py</code> 渲染回显时带有 <code>&lt;strong style=&quot;color: #003366&quot;&gt;</code> 的内联色彩，当你取消加粗时，浏览器为了保留这个它以为很重要的 <code>style</code>，会退化成 <code>&lt;span style=&quot;color: #003366; font-weight: normal&quot;&gt;</code>。这会导致 <code>strong</code> 加粗语义不再生效，但内联颜色仍然污染文章视图。同时，新建加粗时浏览器调用产出的是 <code>&lt;b&gt;</code> 导致部分只涵盖了 <code>strong</code> 的 CSS 失效。
+<strong>解决方案</strong>：</p>
+<ol>
+<li><strong>彻底清空后台颜料</strong>：在前端提取加载 HTML 后（<code>/api/articles/:id/content</code>），马上通过 <code>querySelectorAll('strong').forEach(st =&gt; st.style.color = '');</code> 强行剥离内联颜色，完全信任 CSS 文件。</li>
+<li><strong>CSS 并集锁定</strong>：不仅是 <code>strong</code>，必须同时书写 <code>.content strong, .content b { color: #003366; }</code> 的联合样式规则。</li>
+</ol>
+<h2>7. 深层嵌套元素的 DOM 插入尾部坍塌 (Deeply Nested DOM Appending)</h2>
+<p><strong>问题现象</strong>：点击原文上部的段落或图片并尝试进行插入段落、插入图片操作时，新元素永远跑到全篇文末底部，而不是紧跟其后。
+<strong>问题根因</strong>：原先用于安全检测插入点的防御机制 <code>if (anchor &amp;&amp; anchor.parentNode === container)</code> 太过严苛。经过 <code>md2wechat.py</code> 精心排版的富文本，往往有多达三四层的自定义 <code>&lt;section&gt;</code>、<code>&lt;aside&gt;</code> 构成包裹。此时的 <code>anchor</code> 其 <code>parentNode</code> 是内部某块 <code>&lt;section&gt;</code> 根本碰不到 <code>#article-content</code> (container) 的大外壳，导致逻辑判断失败后强制走 <code>else</code> 把其无脑扔至队尾。
+<strong>解决方案</strong>：彻底放宽至 <code>if (anchor &amp;&amp; anchor.parentNode)</code> 并取消父级检测，允许 <code>insertBefore</code> 放进当前所在层级的排版中（只要 <code>htmlToMarkdown</code> 是全递归的，任何位置的新内容都会被扫到）。另外要舍弃 <code>focusin</code> 这个有缺陷的方法，改为采用 <code>mousedown</code> 与 <code>selectionchange</code> 强捕获各类&quot;死白板&quot;的鼠标游标元素。</p>
+<h2>8. 回车截断不完全导致的行为丢失 (Incomplete Enter Key Hijacking)</h2>
+<p><strong>问题现象</strong>：在 <code>&lt;h3&gt;</code> 或者引用区块里按回车，页面毫无反应甚至造成多出一个没有段落意义的空 <code>&lt;div&gt;</code>。
+<strong>问题根因</strong>：老代码中劫持事件中有一句 <code>if (editableBlock.tagName !== 'P') return;</code> 将大量其他有敲击需求的地方挡住了，引发了浏览器内置的回车破坏 DOM 结构。
+<strong>解决方案</strong>：除了需要使用浏览器默认新建子 <code>LI</code> 的列表以外，直接放开给 <code>H3</code>, <code>DIV</code> 等元素共同接管拦截操作。只要在此处按下回车，都走自定义逻辑并在后方强行植入崭新待编辑的 <code>&lt;p&gt;</code> 段落。</p>
+<h2>9. Python生成的富文本在逆向转回 Markdown 时结构丢失 (AST Preservation)</h2>
+<p><strong>问题现象</strong>：在前端针对 <code>md2wechat.py</code> 生成的原文标题（如 <code>H2</code>, <code>H3</code>）或者黑框引用区修改文字后点击保存，回到 Markdown 源码中，发现原有的 <code>##</code>、<code>###</code>、<code>&gt;</code> 修饰符全部消失，变成了没有任何格式的正文段落。
+<strong>问题根因</strong>：<code>htmlToMarkdown</code> 是用白名单解析 DOM 树的。原先对于 <code>md2wechat.py</code> 生成的非常定制化的 <code>&lt;section&gt;</code>，解析逻辑完全不知道它原本是个 H2 还是 H3，只能按照普通的包裹块处理，递归到最里面的 <code>&lt;p&gt;</code> 后，输出了普通的换行文本。
+<strong>解决方案</strong>：</p>
+<ol>
+<li><strong>注入标识</strong>：在后台 Python <code>md2wechat.py</code> 进行 <code>Markdown -&gt; HTML</code> 的同时，给特定生成的结构级标签（H1, H2, H3, H4, Blockquote, 无序列表，有序列表）注入自定义的数据属性 <code>data-md=&quot;h1&quot;</code>, <code>data-md=&quot;h2&quot;</code>, <code>data-md=&quot;h3&quot;</code>, <code>data-md=&quot;h4&quot;</code> 等。</li>
+<li><strong>逆向还原</strong>：在前端 <code>index.html</code> 里的 <code>htmlToMarkdown</code> 函数拿到这些标签时，第一时间拦截 <code>mdType</code>，根据对应的逆向语法直接还原出 <code># </code>、<code>## </code>、<code>### </code>、<code>#### </code>、<code>&gt; </code> 和 <code>- </code>，彻底打通无损双向转换。</li>
+</ol>
+<h2>10. Markdown 导入丢失真实文件名导致全盘&quot;未命名文章&quot; (Filename Fallback Extraction)</h2>
+<p><strong>问题现象</strong>：如果用户的 Markdown 文章出于某种书写习惯，并没有在内部书写类似 <code># 标题</code> 的一级标题。在将其导入排版系统后，系统会将文章名强制置为粗暴的&quot;未命名文章&quot;，导致工作台列表中大量同名卡片，无法分辨具体内容。
+<strong>问题根因</strong>：后端 <code>db.js</code> 处理导入的正则表达式 <code>^#\s+(.+)$</code> 匹配失败时，会触发写死的初始兜底赋值 <code>let title = '未命名文章'</code>。
+<strong>解决方案</strong>：在逻辑匹配失败的兜底中，不应写死。而应使用 <code>let title = path.basename(mdFilePath, '.md');</code> 自动通过所在的文件基准名来安全回落。</p>
+<h2>11. 前端截流 Base64 导致剪贴及文生图保存丢失 (Base64 Extraction &amp; Storage)</h2>
+<p><strong>问题现象</strong>：在富文本编辑器中插入文生图等形式产生的 Base64 内存图片片段（如 <code>data:image/...</code>）时，点击保存后重新刷新，发现所有的生图都变成了带有占位文字&quot;（新插入图片，需手动替换为本地路径）&quot;的死文字。
+<strong>问题根因</strong>：原生 <code>htmlToMarkdown</code> 出于防御机制，一旦侦测到 <code>src.startsWith('data:')</code> 就会切断链接强塞占位符。原本是为了避免高保真 Base64 几 MB 的死代码撑死源文件，但如此&quot;一脚踩死&quot;导致真实数据永远无法到达后端 <code>server.js</code>，自然无从挽救图片数据。
+<strong>解决方案</strong>：</p>
+<ol>
+<li><strong>释放前端水库闸门</strong>：移除这些强行截断图片数据的代码，允许前端向服务器推送真实带有 Base64 图片实体像素的 Markdown。</li>
+<li><strong>后端引入物理抽水机 (extractBase64Images)</strong>：在 <code>/save</code> 以及触发 <code>/publish</code> 的存储路由截面上，部署处理管道：用正则匹配 Markdown 中含有的 <code>data:image</code> 元素。捕获到以后立即在同级物理目录中安全创建 <code>imgs/</code> 图库并将其生成为高清原质量快照 <code>img_[TS].png</code> 落地。紧接着在内存中重修 Markdown 源头文本，将几十万字母长的脏污 Base64 换成极为雅致的相对路径（<code>imgs/xxx.png</code>）。实现前端富图集能力与后端硬盘存储双赢。</li>
+</ol>
+<h2>12. 逆向编译不支持 TABLE 导致结构化表格永久丢失 (Table Syntax Drop Bug)</h2>
+<p><strong>问题现象</strong>：带有原生产品对比或数据 <code>&lt;TABLE&gt;</code> 表格的文章被编辑器拉取并呈现。当点击发布时，新覆写的修订版 <code>.md</code> 会将一整张表格连带数据&quot;变魔术一样变没&quot;。
+<strong>问题根因</strong>：把 HTML 前端富文本转入底层平铺字符结构（Markdown）是依靠的一套 <code>['DIV', 'SECTION', ...]</code> 白名单黑盒。系统没能在此白名单和专属正则中录入 <code>TABLE</code>，导致 HTML DOM 中的所有表格直接滑入了最后兜底一行 <code>return '';</code> 被直接静默丢弃。
+<strong>解决方案</strong>：为 <code>public/index.html</code> 增补针锋相对的 <code>TABLE</code> 处理子支架：针对 <code>tr</code> 大循环打散换行，针对 <code>td/th</code> 打包附着管线符拼接为表格主数据 <code>| A | B |</code>；不仅要通过监控首行自动向数据缝隙内强行推送 <code>|---|---|</code> 标准间隔；更重要的一板斧是彻底抹净单元格内自带的干扰符。杜绝以后再发生任何对比图表丢失事故。</p>
+<h2>13. 预听模式空白页下本地绝对相对路径失灵之谜 (Window.open URL Identity Resolution Bug)</h2>
+<p><strong>问题现象</strong>：为了打造供朗读器和人类零延时审核的&quot;预听&quot;页面，我们设计了使用 <code>window.open('', '_blank')</code> 生成空白标签页面。随即将克隆后并清洗好编辑态的干净 HTML 内容灌入内部的方法。此时整个框架表现完美，但令人抓狂的是：所有的原生图床和插入的长图突然全成了红叉图（<code>broken image</code>）。
+<strong>问题根因</strong>：这源自于绝大部分网页和框架都根深蒂固使用的无协议、无域名的局部代理路径！因为原编辑器工作台有着 <code>http://localhost:3456/</code> 的金身加持护送，所以任何诸如 <code>&lt;img src=&quot;/local-img/xxx&quot;&gt;</code> 的声明都会完美地发往这台主服务器；可是弹窗跳出的是 <code>about:blank</code> 无名孤岛！在这个真空中，由于没有域名背书，浏览器直接视所有&quot; <code>/local-img/</code> &quot;为非法甚至尝试作为文件绝对地址获取，结果便是因为同源策略连根拔起，死路一条。
+<strong>解决方案</strong>：决不能直接把携带有相对 <code>src</code> 甚至本地物理绝对 <code>file:///</code> 地址的引用照单全推给新窗口。必须给新窗口安排&quot;带路党&quot;。在 <code>document.write</code> 下发前劫杀每一条 <code>&lt;img src&gt;</code> 甚至 <code>&lt;iframe src&gt;</code>。如果断定其并非原生的带 HTTP 外网图或者是纯生 <code>data:image</code>：则必须将本系统目前执行的前端根源发起域 <code>window.location.origin</code> 作指针强行缝死在原本的值上。强迫新标签页访问诸如 <code>http://localhost:3456/local-img/</code> 级别的完整 URL；用跨域取向保证渲染。</p>
+<h2>14. 渲染级自动装配引发的&quot;影分身&quot;递归污染惨案 (Editor Content Loop Contamination Bug)</h2>
+<p><strong>问题现象</strong>：在给微信推送的底层 Python 渲染引擎加上&quot;自动注入公众号个人引流卡&quot;逻辑后。一旦在工作台上正常查阅并修改任意一篇文章，保存后推送至微信平台查验，就会发现在正文底部，赫然出现了一真一假两张一模一样的引流卡（其中被排挤出局的一张更是丧失了超级链接属性的纯文字版）。
+<strong>问题根因</strong>：过度热情的无脑后处理挂载没有区分出&quot;阅览编辑态&quot;和&quot;闭眼推送态&quot;！当页面仅仅只是为了请求 <code>_editor_preview.html</code> （工作台的基础展现画布节点组册）而在服务端拉起 Python 引擎时，程序&quot;忠心地&quot;在画板上加上了此名片。这要命的设计让编辑者在修改时顺理成章地在页面上囊括了这张卡。此时点击 <code>✅ 保存</code>：前端的 <code>htmlToMarkdown</code> 会用逆向爬虫洗劫画布上所有的内容，毫不留情地把这块名片抽离成了纯生 Markdown &quot;死文字&quot;写入了硬盘内储存数据的源 <code>x.md</code> 中！等真正触发推送向全网输出时，这份残留着死文字的宿主会和正常工作的引擎再一次碰撞重叠！双胞胎递归漏洞由此彻底爆发。
+<strong>解决方案</strong>：分离运行环境权限，实行最小授权策略。专门为 <code>md2wechat.py</code> 定制一套 <code>--inject-signature</code> 安全参数锁。仅当 <code>server.js</code> 发生绝对不会回头倒灌污染本地原稿的单向式 <code>/publish</code> 请求时，才伴随参数唤起卡片装配指令。而囊括前端复刻重构、生成编辑器画板以及快速生成的阅读听发界面统统采取强力锁死屏蔽。实现完美分离。</p>
+<h2>15. 微信公众号 API 底层硬性要求（无图不发文）踩坑 (WeChat ErrCode 40007 Interception)</h2>
+<p><strong>问题现象</strong>：在保存并推送一篇纯文字（无任何图片及配图）的文章时，前端冷不丁弹窗&quot;推送异常：推送结果异常，请查看日志&quot;。但实际上编辑及保存环节都极度平滑。
+<strong>问题根因</strong>：这涉及到微信生态 API 的硬性强制黑盒协议——每一篇从后台 API 上传至微信服务器的文章，都<strong>极其强制性地要求有且必须提供一张 <code>thumb_media_id</code> 作为外部展现流的缩略封面图</strong>！发布脚本 <code>wechat_publisher.py</code> 全文寻搜配图未果后，硬着头皮向微信总台递送了不含封面的 <code>payload</code>，结果毫无悬念地被腾讯接口直接拒签并抛出了刺眼的 <code>errcode: 40007 (invalid media_id)</code>。因为异常极为底层，旧有前端直接傻眼。
+<strong>解决方案</strong>：绝不能指望只依靠底层 Python 拦截。我们直接在通讯控制中枢 Node (<code>server.js</code>) 获取 Python 的标准输出管道 <code>stdout</code> 上叠加专精级异常探针：一旦嗅探出包含由于缺图带来的被拒标识 <code>publishOutput.includes('40007')</code> 等情况，即刻启动熔断，并向前端重新封装一句无比通透亲和的中文提示警报：&quot;微信官方规定必须设至少一张图作为外显封面，请回工作台加图&quot;。彻底切断自媒体新人和开发者的报错深究疲劳链。</p>
+<h2>16. 引用块逆向转换内联标签静默丢弃 (Blockquote Inline Content Loss Bug)</h2>
+<p><strong>问题现象</strong>：在编辑器中修改文章后保存，引用块（blockquote）内的加粗文字、斜体文字等全部消失，保存后的修订版 <code>.md</code> 中引用行只剩下空的 <code>&gt; </code> 前缀。
+<strong>问题根因</strong>：<code>htmlToMarkdown</code> 的 <code>data-md=&quot;blockquote&quot;</code> 分支使用了 <code>processNode</code> 递归提取内容。但 <code>processNode</code> 只识别块级标签（<code>DIV</code>/<code>SECTION</code>/<code>P</code> 等），而 <code>md2wechat.py</code> 的引用块渲染结果是将文本通过 <code>inline()</code> 函数处理后以 <code>&lt;br&gt;</code> 连接，直接塞入 <code>&lt;section&gt;</code> 内部——即内部是 <code>&lt;strong&gt;</code>、<code>&lt;em&gt;</code>、<code>&lt;code&gt;</code>、<code>&lt;br&gt;</code> 等纯内联元素。这些内联标签不在 <code>processNode</code> 的白名单中，全部被静默丢弃（<code>return ''</code>）。
+<strong>解决方案</strong>：将 blockquote 的内容提取从 <code>processNode</code> 递归改为 <code>inlineToMd(node)</code> 调用。<code>inlineToMd</code> 能正确识别 <code>STRONG</code>→<code>**</code>、<code>EM</code>→<code>*</code>、<code>BR</code>→<code>\n</code>、<code>IMG</code>→<code>![]()</code> 等内联标签，完美还原引用块内容。</p>
+<blockquote>
+<p><strong>核心经验</strong>：在 <code>htmlToMarkdown</code> 中，块级容器的子内容如果是内联 HTML（而非嵌套块级标签），必须使用 <code>inlineToMd</code> 而非 <code>processNode</code> 提取。当前 H4 (<code>data-md=&quot;h4&quot;</code>) 和 blockquote (<code>data-md=&quot;blockquote&quot;</code>) 的逆向转换都遵循此规则。</p>
+</blockquote>
+<h2>17. 样式表的注入与隔离 (CSS Injection)</h2>
+<p><strong>问题现象</strong>：在为系统引入复杂组件（如 Split Button 下拉组合按钮）时，新加的组件样式被外层容器（<code>.floating-bar</code>）的 <code>gap: 10px</code> 撕裂，下拉框由于受到默认列表样式污染而在外部丑陋显现。
+<strong>问题根因</strong>：没有做良好的 CSS 重置与层叠隔离。复合组件必须自行消化布局间隔并建立单独的格式化上下文（BFC）。
+<strong>解决方案</strong>：</p>
+<ol>
+<li><code>split-btn-group</code> 必须声明 <code>gap: 0 !important; margin: 0; padding: 0;</code>。</li>
+<li>下拉菜单必须拥有明确的定位和默认隐藏状态 <code>display: none; position: absolute;</code>。</li>
+<li>动态插入的 <code>&lt;style&gt;</code> 必须确保放至 <code>&lt;head&gt;</code> 底部以覆盖先前声明。</li>
+</ol>
+<h2>18. API 调用拦截与串行策略 (Sequential API Dispatching)</h2>
+<p><strong>问题现象</strong>：在支持“一键发双端”功能时，如果用 <code>Promise.all([PushWechat, PushBlog])</code> 并行触发，会导致底层 Python 脚本出现读写竞态，轻则日志乱码串台，重则同一篇 Markdown 文件写入冲突导致进程崩溃挂起。
+<strong>问题根因</strong>： Node 端的异步并行未能约束隔离物理机器上的阻塞式 IO 争抢。
+<strong>解决方案</strong>：彻底废弃并行拉起。强制采用 <code>await</code> 的串行机制。优先执行耗时短、容错好的“微信草稿箱推送”，当其完整返回 <code>success</code> 后，再继续进入需要拉取 Git 远端和长文件拷贝的“部署个人博客”环节。</p>
 
         </article>
         <footer class="footer" style="justify-content: center; border: none; margin-top: 60px;">
