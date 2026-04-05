@@ -93,7 +93,8 @@
             img.style.cursor = 'zoom-in';
             img.addEventListener('click', (e) => {
                 e.stopPropagation();
-                lbImg.src = img.src;
+                // 优先读取 data-original 中的高清原图链接，降级使用 src（缩略图）
+                lbImg.src = img.dataset.original || img.src;
                 lbImg.alt = img.alt || '';
                 overlay.classList.add('active');
                 document.body.style.overflow = 'hidden';
